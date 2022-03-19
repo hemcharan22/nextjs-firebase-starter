@@ -1,11 +1,16 @@
-import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-import styles from "../styles/Home.module.css";
-import { useAuth } from "../components/Auth/auth";
-import { setErrorMessage } from "../components/Auth/setErrorMessage";
+import { useAuth } from "../pages/api/auth";
+import { setErrorMessage } from "../pages/api/setErrorMessage";
+
+import * as React from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
+import { signInWithGoogle } from "../pages/api/config";
+import { signInWithGithub } from "../pages/api/config";
 
 const Login = () => {
   const router = useRouter();
@@ -15,7 +20,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const signUp = (event, email, password) => {
-    event.preventDefault();
+    event.preventDefault(); // prevents default behaviour of html form for more explainion visit https://stackoverflow.com/questions/62468443/firebase-auth-network-error-from-event-preventdefault-and-event-stoppropagatio#:~:text=preventDefault()%20you%20indicate%20that,to%20act%20on%20the%20event.
 
     auth
       .signUp(email, password)
@@ -30,10 +35,7 @@ const Login = () => {
       });
   };
 
-  // loading state
-  if (auth.loading) {
-    return <p>Loading...</p>;
-  }
+  // const auth = getAuth();
 
   // if a user is logged in, redirect to a page of your liking
   if (auth.user) {
@@ -44,41 +46,82 @@ const Login = () => {
   // if there is no signed in user
   if (!auth.user) {
     return (
-      <div className={styles.container}>
-        <Head>
-          <title>NextJS Firebase Auth Starter Kit</title>
-          <meta
-            name="description"
-            content="A starter kit created by @official-carledwardfp"
-          />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+      <div style={{ width: "300px", margin: "auto" , marginTop : "100px" }}>
+        <p>Signup</p>
 
-        <main className={styles.main}>
-          <h1 className={styles.title}>Signup</h1>
+        <Button
+          type="submit"
+          variant="outlined"
+          onClick={signInWithGoogle}
+          sx={{ marginBottom: "10px", width: "200px" }}
+        >
+          Sign-in with Google
+        </Button>
+
+        <Button
+          type="submit"
+          variant="outlined"
+          onClick={signInWithGithub}
+          sx={{ marginBottom: "10px", width: "200px" }}
+        >
+          Sign-in with Github
+        </Button>
+        {/* github not enabled enable it in the firebase console */}
+
+        <form onSubmit={(event) => signUp(event, email, password)}>
+          <label>
+            <p>Email Address</p>
+          </label>
+          <TextField
+            sx={{ width: 200 }}
+            fullWidth
+            id="outlined-basic"
+            label="Enter your email"
+            variant="outlined"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+
           <br />
-          <form onSubmit={(event) => signUp(event, email, password)}>
-            <label htmlFor="email">Email Address</label>
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <button type="submit">Submit</button>
-          </form>
-          <Link href="/">&larr; Go back</Link>
-        </main>
+
+          <label>
+            <p>password</p>
+          </label>
+          <TextField
+            sx={{ width: 200 }}
+            id="outlined-basic"
+            label="Enter your password"
+            variant="outlined"
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+
+          <br />
+          <br />
+
+          <Button type="submit" variant="contained">
+            signup
+          </Button>
+        </form>
+
+        <br />
+
+        <a href="/"> <p>&larr; Go back</p> </a>
+        {/* &larr is the html charector for left arrow https://www.w3schools.com/charsets/ref_utf_arrows.asp */}
+      
       </div>
     );
   }
 };
 
 export default Login;
+
+{
+  /* github not enabled enable it in the firebase console */
+}

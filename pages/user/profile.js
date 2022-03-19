@@ -1,16 +1,13 @@
+import React from "react";
 import Link from "next/link";
-
-// import styles from '../styles/globals.css'
-
-import { useAuth } from "./api/auth";
+import { useAuth } from "../api/auth";
 
 import Button from "@mui/material/Button";
 
-export default function Home() {
+function profile() {
   const { user, loading, signOut } = useAuth();
-
   return (
-    <main>
+    <>
       {user ? (
         <>
           <p>Email: {user.email}</p>
@@ -38,6 +35,8 @@ export default function Home() {
           </Link>
         </>
       )}
-    </main>
+    </>
   );
 }
+
+export default profile;
